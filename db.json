@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Juan Perez",
+      "email": "jperez@gmail.com",
+      "address": "Santo Domingo Este",
+      "phone": "8093424567"
+    },
+    {
+      "id": "2",
+      "name": "Carlos Lara",
+      "email": "clara@gmail.com",
+      "address": "Santo Domingo Este",
+      "phone": "8299873245"
+    }
+  ]
+}
