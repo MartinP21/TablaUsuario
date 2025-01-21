@@ -94,6 +94,12 @@ fetch("http://localhost:3000/users")
             botonEditar.onclick = () => {
                 const formData = new FormData(form);
 
+                //Validacion para no guardar valores vacios
+                if(!formData.get("name") || !formData.get("email") || !formData.get("address") || !formData.get("phone")){
+                    alert("Todos los campos deben ser completados");
+                    return;
+                }
+
                 //Crear nuevo objeto de usuarioActualizado
                 const usuarioActualizado = {
                     name: formData.get("name"),
@@ -129,37 +135,82 @@ fetch("http://localhost:3000/users")
             }
         }
         
-        // Get the modal
+        // Obtiene el modal
         var modal = document.getElementById("myModal");
 
-        // Get the button that opens the modal
+        // Obtiene el boton para abrir el modal
         var btn = document.getElementById("myBtn");
 
-        // Get the <span> element that closes the modal
+        // Obtiene el span que cierra el modal
         var span = document.getElementsByClassName("close")[0];
 
-        // When the user clicks the button, open the modal 
+        // Controlar si el modal tiene el foco dentro
+        var focusEnModal = false;
+
+        // Abrir el modal 
         btn.onclick = function() {
             modal.style.display = "block";
+            focusEnModal = true; // Establecer que el foco está dentro
         }
 
-        // When the user clicks on <span> (x), close the modal
+        // Cerrar el modal al hacer clic en <span>
         span.onclick = function() {
             modal.style.display = "none";
         }
 
-        // When the user clicks anywhere outside of the modal, close it
+        // Cerrar el modal si se hace clic fuera de él
         window.onclick = function(event) {
-            if (event.target == modal) {
+            if (event.target == modal && !focusEnModal) {
                 modal.style.display = "none";
             }
         }
 
+        //Detectar el foco en los elementos del modal
+        modal.addEventListener("focusin", () => {
+            focusEnModal = true;
+        })
+
+        //Detectar cuando el foco sale del modal
+        modal.addEventListener("focusout", (event) => {
+            // Solo permitir que el modal se cierre si el foco sale completamente del modal
+            setTimeout(() => {
+                if(!modal.contains(document.activeElement)) {
+                    focusEnModal = false;
+                }
+            }, 0);
+        })
+
+        // Cerrar el modal si el usuario hace clic fuera del modal
+        window.onclick = (event) => {
+            // Solo cerramos el modal si el clic es fuera del modal y no hay foco dentro de él
+            if (event.target === modal && !focusEnModal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Detectar si el clic es en el área fuera del modal
+        window.addEventListener('mousedown', (event) => {
+            if (modal.contains(event.target)) {
+                // Si el clic es dentro del modal, no hacemos nada, porque el usuario está interactuando con él
+                focusEnModal = true;
+            } else {
+                // Si el clic es fuera del modal, marcamos que no hay foco dentro del modal
+                focusEnModal = false;
+            }
+        });
+
+        //Filtro de usuarios 
         const buscarInput = document.querySelector("#buscarInput");
         buscarInput.addEventListener("input", (e) => {
             const buscarText = e.target.value.toLowerCase();
-            const filteredUsers = data.filter(user =>
-                user.name.toLowerCase().includes(buscarText)
+            const filteredUsers = data.filter(user => {
+                const nombre = user.name.toLowerCase().includes(buscarText);
+                const correo = user.email.toLowerCase().includes(buscarText);
+                const direccion = user.address.toLowerCase().includes(buscarText);
+                const telefono = user.phone.toLowerCase().includes(buscarText);
+
+                return nombre || correo || direccion || telefono
+            }
             );
             renderUsuario(filteredUsers);
         });
@@ -169,6 +220,11 @@ fetch("http://localhost:3000/users")
             
             const form = document.querySelector("#userForm");
             const formData = new FormData(form);
+
+            if(!formData.get("name") || !formData.get("email") || !formData.get("address") || !formData.get("phone")){
+                alert("Todos los campos deben ser completados");
+                return;
+            }
 
             //Validacion para que si se elimina un usuario no se agregue el mismo id a un nuevo usuario
               // Generar un nuevo ID único
@@ -201,11 +257,3 @@ fetch("http://localhost:3000/users")
                 .catch((error) => console.error("Error al agregar usuario", error));
         });
     });
-
-    
-
-    //  // Evento para eliminar usuario
-    //  botonElim.onclick = () => eliminarUsuario(user.id);
-
-    //  // Evento para editar usuario
-    //  botonEditar.onclick = () => editarUsuario(user);

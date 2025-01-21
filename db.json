@@ -8,11 +8,25 @@
       "phone": "8093424567"
     },
     {
-      "id": "2",
-      "name": "Carlos Lara",
+      "name": "Carlos",
       "email": "clara@gmail.com",
       "address": "Santo Domingo Este",
-      "phone": "8299873245"
+      "phone": "8299873245",
+      "id": "2"
+    },
+    {
+      "name": "Karina",
+      "email": "karianny@gmail.com",
+      "address": "Santiago",
+      "phone": "8093424567",
+      "id": "3"
+    },
+    {
+      "name": "Elvis Antonio",
+      "email": "elvis@gmail.com",
+      "address": "Punta Cana",
+      "phone": "8299873245",
+      "id": "5"
     }
   ]
 }
