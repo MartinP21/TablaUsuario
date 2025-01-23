@@ -1,3 +1,10 @@
+const telefonoInput = document.querySelector("#phone");
+telefonoInput.addEventListener("input", (e) => {
+    if (e.target.value.length > 10) {
+        e.target.value = e.target.value.slice(0, 10);
+    }
+});
+
 fetch("http://localhost:3000/users")
     .then(response => response.json())
     .then(data => {
@@ -64,8 +71,8 @@ fetch("http://localhost:3000/users")
         const eliminarUsuario = (id) => {
             fetch(`http://localhost:3000/users/${id}`, {
                 method: "DELETE",
-            })
-        }
+            });
+        };
 
         //Funcion para editar usuario
         const editarUsuario = (usuario) => {
@@ -93,12 +100,17 @@ fetch("http://localhost:3000/users")
             //Evento click para el boton editar
             botonEditar.onclick = () => {
                 const formData = new FormData(form);
+                const emailInput = form.querySelector("#email");
 
-                //Validacion para no guardar valores vacios
-                if(!formData.get("name") || !formData.get("email") || !formData.get("address") || !formData.get("phone")){
-                    alert("Todos los campos deben ser completados");
+                const email = emailInput.value.trim();
+                
+                // Validación del formato de correo electrónico
+                const emailFormato = /^\w+([.-_+]\w+)*@\w+([.-]\w+)*(\.\w{2,10})+$/;
+                if (!emailFormato.test(email)) {
+                    form.classList.add("was-validated");
                     return;
                 }
+    
 
                 //Crear nuevo objeto de usuarioActualizado
                 const usuarioActualizado = {
@@ -106,7 +118,7 @@ fetch("http://localhost:3000/users")
                     email: formData.get("email"),
                     address: formData.get("address"),
                     phone: formData.get("phone"),
-                }
+                };
 
                 //Uso de fetch para llamar el metodo y actualizar los cambios
                 fetch(`http://localhost:3000/users/${usuario.id}`, {
@@ -132,9 +144,28 @@ fetch("http://localhost:3000/users")
                     console.error("Error al editar usuario:", error);
                     alert("Error al editar usuario: " + error.message);
                 });
-            }
-        }
+            };
+        };
         
+        // Agregar evento keydown al formulario para detectar 'Enter'
+        const form = document.querySelector("#userForm");
+        form.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault() //Evita el envio del formulario por defecto
+
+                const btnGuardar = document.querySelector("#btnGuardar");
+                const botonEditar = document.querySelector("#btnEditar");
+
+                //Verificar si esta en modo agregar o editar
+                if (btnGuardar.style.display === "inline") {
+                    btnGuardar.click();
+                }
+                else if (botonEditar.style.display === "inline") {
+                    botonEditar.click()
+                }
+            }
+        });
+
         // Obtiene el modal
         var modal = document.getElementById("myModal");
 
@@ -151,24 +182,24 @@ fetch("http://localhost:3000/users")
         btn.onclick = function() {
             modal.style.display = "block";
             focusEnModal = true; // Establecer que el foco está dentro
-        }
+        };
 
         // Cerrar el modal al hacer clic en <span>
         span.onclick = function() {
             modal.style.display = "none";
-        }
+        };
 
         // Cerrar el modal si se hace clic fuera de él
         window.onclick = function(event) {
             if (event.target == modal && !focusEnModal) {
                 modal.style.display = "none";
             }
-        }
+        };
 
         //Detectar el foco en los elementos del modal
         modal.addEventListener("focusin", () => {
             focusEnModal = true;
-        })
+        });
 
         //Detectar cuando el foco sale del modal
         modal.addEventListener("focusout", (event) => {
@@ -178,7 +209,7 @@ fetch("http://localhost:3000/users")
                     focusEnModal = false;
                 }
             }, 0);
-        })
+        });
 
         // Cerrar el modal si el usuario hace clic fuera del modal
         window.onclick = (event) => {
@@ -186,7 +217,7 @@ fetch("http://localhost:3000/users")
             if (event.target === modal && !focusEnModal) {
                 modal.style.display = "none";
             }
-        }
+        };
 
         // Detectar si el clic es en el área fuera del modal
         window.addEventListener('mousedown', (event) => {
@@ -209,22 +240,29 @@ fetch("http://localhost:3000/users")
                 const direccion = user.address.toLowerCase().includes(buscarText);
                 const telefono = user.phone.toLowerCase().includes(buscarText);
 
-                return nombre || correo || direccion || telefono
-            }
-            );
+                return nombre || correo || direccion || telefono;
+            });
             renderUsuario(filteredUsers);
         });
 
+        const btnGuardar = document.querySelector("#btnGuardar");
         btnGuardar.addEventListener("click", (e) => {
             e.preventDefault();
             
             const form = document.querySelector("#userForm");
-            const formData = new FormData(form);
+            const emailInput = form.querySelector("#email");
 
-            if(!formData.get("name") || !formData.get("email") || !formData.get("address") || !formData.get("phone")){
-                alert("Todos los campos deben ser completados");
+            const email = emailInput.value.trim();
+            
+            // Validación del formato de correo electrónico
+            const emailFormato = /^\w+([.-_+]\w+)*@\w+([.-]\w+)*(\.\w{2,10})+$/;
+            if (!emailFormato.test(email)) {
+                form.classList.add("was-validated");
                 return;
             }
+
+            const formData = new FormData(form);
+          
 
             //Validacion para que si se elimina un usuario no se agregue el mismo id a un nuevo usuario
               // Generar un nuevo ID único
@@ -252,6 +290,7 @@ fetch("http://localhost:3000/users")
                 .then(usuario => {
                     alert("Usuario agregado exitosamente");
                     data.push(usuario);
+                    renderUsuario(data);
                     modal.style.display = "none";
                 })
                 .catch((error) => console.error("Error al agregar usuario", error));

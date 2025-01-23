@@ -48,22 +48,46 @@
             <div class="container">
                 <h2 id="titleAgregar">Agregar Nuevo Usuario</h2>
                 <h2 id="titleEditar" style="display: none;">Editar Usuario</h2>
-                <form action="db.json" method="post" id="userForm">
+                <form action="db.json" method="post" id="userForm" class="g-3 needs-validation" novalidate>
                     <div class="mb-3">
                         <label for="name" class="form-label">Nombre</label>
                         <input type="text" id="name" name="name" class="form-control" placeholder="Nombre" required>
+                        <div class="valid-feedback">
+                            Correcto
+                        </div>
+                        <div class="invalid-feedback">
+                            Escriba un nombre, no puede dejar el nombre vacio.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo Electrónico</label>
                         <input type="email" id="email" name="email" class="form-control" placeholder="Correo Electrónico" required>
+                        <div class="valid-feedback">
+                            Correcto
+                        </div>
+                        <div class="invalid-feedback">
+                            Escriba un correo electrónico valido.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Ciudad</label>
                         <input type="text" id="address" name="address" class="form-control" placeholder="Ciudad" required>
+                        <div class="valid-feedback">
+                            Correcto
+                        </div>
+                        <div class="invalid-feedback">
+                            Escriba una direccion, no puede dejar la direccion vacia.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Teléfono</label>
                         <input type="text" id="phone" name="phone" class="form-control" placeholder="Teléfono" required>
+                        <div class="valid-feedback">
+                            Correcto
+                        </div>
+                        <div class="invalid-feedback">
+                            Escriba un numero de telefono, no puede dejar el telefono vacio.
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-success" id="btnGuardar" style="display: inline;">Agregar Usuario</button>
                     <button type="button" class="btn btn-success" id="btnEditar" style="display: none;">Editar</button>
